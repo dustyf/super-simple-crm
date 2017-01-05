@@ -43,7 +43,7 @@
  * @param  string $class_name Name of the class being requested.
  * @return void
  */
-function simple_crm_autoload_classes( $class_name ) {
+function super_simple_crm_autoload_classes( $class_name ) {
 	if ( 0 !== strpos( $class_name, 'SDR_' ) ) {
 		return;
 	}
