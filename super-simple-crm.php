@@ -44,13 +44,13 @@
  * @return void
  */
 function super_simple_crm_autoload_classes( $class_name ) {
-	if ( 0 !== strpos( $class_name, 'SDR_' ) ) {
+	if ( 0 !== strpos( $class_name, 'SSCRM_' ) ) {
 		return;
 	}
 
 	$filename = strtolower( str_replace(
 		'_', '-',
-		substr( $class_name, strlen( 'SDR_' ) )
+		substr( $class_name, strlen( 'SSCRM_' ) )
 	) );
 
 	Super_Simple_CRM::include_file( 'includes/class-' . $filename );
@@ -136,7 +136,7 @@ final class Super_Simple_CRM {
 	 * @return void
 	 */
 	public function plugin_classes() {
-
+		$this->customer_data = new SSCRM_Customer_Data( $this );
 	}
 
 	/**
