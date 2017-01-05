@@ -42,6 +42,9 @@ class SSCRM_Customer_Data {
 		$this->register_customer_post_type();
 	}
 
+	/**
+	 * Register the Customer custom post type for storing customer data.
+	 */
 	public function register_customer_post_type() {
 		register_post_type( 'sscrm_customer', array(
 			'public'          => false,
