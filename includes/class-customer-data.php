@@ -76,7 +76,9 @@ class SSCRM_Customer_Data {
 		) );
 	}
 
-
+	/**
+	 * Register the custom taxonomies
+	 */
 	public function register_customer_taxonomies() {
 		// Register Tag Taxonomy
 		register_taxonomy( 'sscrm_customer_tag', 'sscrm_customer', array(
