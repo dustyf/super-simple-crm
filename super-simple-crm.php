@@ -137,6 +137,7 @@ final class Super_Simple_CRM {
 	 */
 	public function plugin_classes() {
 		$this->customer_data = new SSCRM_Customer_Data( $this );
+		$this->form = new SSCRM_Form( $this );
 	}
 
 	/**
