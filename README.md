@@ -1,4 +1,4 @@
-# Simple CRM #
+# Super Simple CRM #
 **Contributors:**      Dustin Filippini  
 **Donate link:**       http://dustyf.com 
 **Tags:**  

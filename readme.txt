@@ -1,4 +1,4 @@
-=== Simple CRM ===
+=== Super Simple CRM ===
 Contributors:      dustyf 
 Donate link:       http://dustyf.com 
 Tags:  

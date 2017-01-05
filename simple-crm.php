@@ -1,19 +1,19 @@
 <?php
 /**
- * Plugin Name: Simple CRM
+ * Plugin Name: Super Simple CRM
  * Plugin URI:  http://dustyf.com
- * Description: A Simple CRM Solution to collect leads
+ * Description: A Super Simple CRM Solution to collect leads
  * Version:     0.0.1
  * Author:      Dustin Filippini
  * Author URI:  http://dustyf.com
  * Donate link: http://dustyf.com
  * License:     GPLv2
- * Text Domain: simple-crm
+ * Text Domain: super-simple-crm
  * Domain Path: /languages
  *
  * @link http://dustyf.com
  *
- * @package Simple CRM
+ * @package Super Simple CRM
  * @version 0.0.1
  */
 
@@ -53,16 +53,16 @@ function simple_crm_autoload_classes( $class_name ) {
 		substr( $class_name, strlen( 'SDR_' ) )
 	) );
 
-	Simple_CRM::include_file( 'includes/class-' . $filename );
+	Super_Simple_CRM::include_file( 'includes/class-' . $filename );
 }
-spl_autoload_register( 'simple_crm_autoload_classes' );
+spl_autoload_register( 'super_simple_crm_autoload_classes' );
 
 /**
  * Main initiation class
  *
  * @since  NEXT
  */
-final class Simple_CRM {
+final class Super_Simple_CRM {
 
 	/**
 	 * Current version
@@ -99,7 +99,7 @@ final class Simple_CRM {
 	/**
 	 * Singleton instance of plugin
 	 *
-	 * @var Simple_CRM
+	 * @var Super_Simple_CRM
 	 * @since  NEXT
 	 */
 	protected static $single_instance = null;
@@ -108,7 +108,7 @@ final class Simple_CRM {
 	 * Creates or returns an instance of this class.
 	 *
 	 * @since  NEXT
-	 * @return Simple_CRM A single instance of this class.
+	 * @return Super_Simple_CRM A single instance of this class.
 	 */
 	public static function get_instance() {
 		if ( null === self::$single_instance ) {
@@ -176,7 +176,7 @@ final class Simple_CRM {
 	 * @return void
 	 */
 	public function init() {
-		load_plugin_textdomain( 'simple-crm', false, dirname( $this->basename ) . '/languages/' );
+		load_plugin_textdomain( 'super-simple-crm', false, dirname( $this->basename ) . '/languages/' );
 		$this->plugin_classes();
 	}
 
@@ -244,18 +244,18 @@ final class Simple_CRM {
 }
 
 /**
- * Grab the Simple_CRM object and return it.
- * Wrapper for Simple_CRM::get_instance()
+ * Grab the Super_Simple_CRM object and return it.
+ * Wrapper for Super_Simple_CRM::get_instance()
  *
  * @since  NEXT
- * @return Simple_CRM  Singleton instance of plugin class.
+ * @return Super_Simple_CRM  Singleton instance of plugin class.
  */
-function simple_crm() {
-	return Simple_CRM::get_instance();
+function super_simple_crm() {
+	return Super_Simple_CRM::get_instance();
 }
 
 // Kick it off.
-add_action( 'plugins_loaded', array( simple_crm(), 'hooks' ) );
+add_action( 'plugins_loaded', array( super_simple_crm(), 'hooks' ) );
 
-register_activation_hook( __FILE__, array( simple_crm(), '_activate' ) );
-register_deactivation_hook( __FILE__, array( simple_crm(), '_deactivate' ) );
+register_activation_hook( __FILE__, array( super_simple_crm(), '_activate' ) );
+register_deactivation_hook( __FILE__, array( super_simple_crm(), '_deactivate' ) );
