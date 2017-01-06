@@ -92,22 +92,47 @@ class SSCRM_Form {
 
 	public function process_form_input( WP_REST_Request $request ) {
 		$params = $request->get_params();
-		$time_api = apply_filters( 'ssdrm_time_api', 'http://www.timeapi.org/utc/now.json?\s' );
+		$time_api = apply_filters( 'sscrm_time_api', 'http://www.timeapi.org/utc/now.json' );
 		$time = wp_remote_get( $time_api );
 		$time_json = json_decode( wp_remote_retrieve_body($time) );
 		$timestamp = $time_json->dateString;
 		$customer_data = array(
-			'name'    => sanitize_text_field( $params['ssdrm_name'] ),
-			'phone'   => sanitize_text_field( $params['ssdrm_phone'] ),
-			'email'   => sanitize_text_field( $params['ssdrm_email'] ),
-			'budget'  => sanitize_text_field( $params['ssdrm_budget'] ),
-			'message' => sanitize_text_field( $params['ssdrm_message'] ),
-			'time'    => absint( $timestamp ),
+			'name'    => sanitize_text_field( $params['sscrm_name'] ),
+			'phone'   => sanitize_text_field( $params['sscrm_phone'] ),
+			'email'   => sanitize_email( $params['sscrm_email'] ),
+			'budget'  => sanitize_text_field( $params['sscrm_budget'] ),
+			'message' => sanitize_text_field( $params['sscrm_message'] ),
+			'time'    => sanitize_text_field( $timestamp ),
 		);
-		
+		$this->insert_post( $customer_data );
 
 		return rest_ensure_response( $customer_data );
 	}
 
+	public function insert_post( $customer_data ) {
+		do_action( 'sscrm_before_insert_post', $customer_data );
+		$gmt = iso8601_to_datetime( $customer_data['time'] );
+		$post_id = wp_insert_post( array(
+			'post_type'     => 'sscrm_customer',
+			'post_date'     => get_date_from_gmt( $gmt ),
+			'post_date_gmt' => $gmt,
+			'post_content'  => wp_strip_all_tags( $customer_data['message'] ),
+			'post_title'    => wp_strip_all_tags( $customer_data['name'] ),
+			'post_status'   => 'publish',
+		) );
+		do_action( 'sscrm_after_insert_post', $customer_data, $post_id );
+		foreach ( $customer_data as $key => $meta ) {
+			if ( in_array( $key, array( 'name', 'message', 'time' ) ) ) {
+				continue;
+			}
+			$this->add_meta( $post_id, 'sscrm_' . $key, $meta );
+		}
+	}
 
+	public function add_meta( $post_id, $key, $meta ) {
+		do_action( 'sscrm_before_add_' . $key . '_meta', $meta, $key, $post_id );
+		$update = update_post_meta( $post_id, $key, $meta );
+		do_action( 'sscrm_after_add_' . $key . '_meta', $meta, $key, $post_id );
+		return $update;
+	}
 }
