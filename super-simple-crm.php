@@ -96,6 +96,10 @@ final class Super_Simple_CRM {
 	 */
 	protected $basename = '';
 
+	protected $customer_data = null;
+
+	protected $form = null;
+
 	/**
 	 * Singleton instance of plugin
 	 *
