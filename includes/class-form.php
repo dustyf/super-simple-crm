@@ -55,6 +55,7 @@ class SSCRM_Form {
 			<label for="sscrm_email">Email Address:</label> <input id="sscrm_email" name="sscrm_email" type="email" /><br/>
 			<label for="sscrm_budget">Desired Budget:</label> <input id="sscrm_budget" name="sscrm_budget" type="text" /><br/>
 			<label for="sscrm_message">Message:</label> <textarea id="sscrm_message" name="sscrm_message"></textarea>
+			<?php wp_nonce_field( 'wp_rest' ); ?>
 			<button id="sscrm_submit">Send</button>
 		</form>
 		<script>
@@ -84,14 +85,15 @@ class SSCRM_Form {
 
 	public function rest_api_endpoint() {
 		register_rest_route( 'sscrm', 'add', array(
-			'methods'  => 'POST',
-			'callback' => array( $this, 'process_form_input' ),
-
+			'methods'       => 'POST',
+			'callback'      => array( $this, 'process_form_input' ),
+			'show_in_index' => false,
 		) );
 	}
 
 	public function process_form_input( WP_REST_Request $request ) {
 		$params = $request->get_params();
+		check_ajax_referer( 'wp_rest' );
 		$time_api = apply_filters( 'sscrm_time_api', 'http://www.timeapi.org/utc/now.json' );
 		$time = wp_remote_get( $time_api );
 		$time_json = json_decode( wp_remote_retrieve_body($time) );
