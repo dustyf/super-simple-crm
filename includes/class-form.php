@@ -152,9 +152,12 @@ class SSCRM_Form {
 						function( data ) {
 							$( '#sscrm_form_container .sending-message' ).hide();
 							$( '#sscrm_form_container .done-message' ).show();
-							console.log( data );
 						}
-					);
+					).fail( function( data ) {
+						$( '#sscrm_form_container .sending-message' ).hide();
+						$( '#sscrm_form_container .fail-message' ).show();
+						console.log( data );
+					} );
 				} )
 			} );
 		</script>
