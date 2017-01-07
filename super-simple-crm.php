@@ -39,8 +39,10 @@
 /**
  * Autoloads files with classes when needed
  *
- * @since  NEXT
+ * @since 0.0.1
+ *
  * @param  string $class_name Name of the class being requested.
+ *
  * @return void
  */
 function super_simple_crm_autoload_classes( $class_name ) {
@@ -60,58 +62,77 @@ spl_autoload_register( 'super_simple_crm_autoload_classes' );
 /**
  * Main initiation class
  *
- * @since  NEXT
+ * @since 0.0.1
  */
 final class Super_Simple_CRM {
 
 	/**
 	 * Current version
 	 *
-	 * @var  string
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
+	 * @var string
 	 */
 	const VERSION = '0.0.1';
 
 	/**
 	 * URL of plugin directory
 	 *
+	 * @since 0.0.1
+	 *
 	 * @var string
-	 * @since  NEXT
 	 */
 	protected $url = '';
 
 	/**
 	 * Path of plugin directory
 	 *
+	 * @since 0.0.1
+	 *
 	 * @var string
-	 * @since  NEXT
 	 */
 	protected $path = '';
 
 	/**
 	 * Plugin basename
 	 *
+	 * @since 0.0.1
+	 *
 	 * @var string
-	 * @since  NEXT
 	 */
 	protected $basename = '';
+	/**
+	 * Instance of SSCRM_Customer Data
+	 *
+	 * @since 0.0.1
+	 *
+	 * @var SSCRM_Customer_Data
+	 */
+	protected $customer_data;
 
-	protected $customer_data = null;
-
-	protected $form = null;
+	/**
+	 * Instance of SSCRM_Form
+	 *
+	 * @since 0.0.1
+	 *
+	 * @var SSCRM_Form
+	 */
+	protected $form;
 
 	/**
 	 * Singleton instance of plugin
 	 *
+	 * @since 0.0.1
+	 *
 	 * @var Super_Simple_CRM
-	 * @since  NEXT
 	 */
 	protected static $single_instance = null;
 
 	/**
 	 * Creates or returns an instance of this class.
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return Super_Simple_CRM A single instance of this class.
 	 */
 	public static function get_instance() {
@@ -125,7 +146,9 @@ final class Super_Simple_CRM {
 	/**
 	 * Sets up our plugin
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
+	 * @return void
 	 */
 	protected function __construct() {
 		$this->basename = plugin_basename( __FILE__ );
@@ -136,7 +159,8 @@ final class Super_Simple_CRM {
 	/**
 	 * Attach other plugin classes to the base plugin class.
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return void
 	 */
 	public function plugin_classes() {
@@ -147,7 +171,8 @@ final class Super_Simple_CRM {
 	/**
 	 * Add hooks and filters
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return void
 	 */
 	public function hooks() {
@@ -157,7 +182,8 @@ final class Super_Simple_CRM {
 	/**
 	 * Activate the plugin
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return void
 	 */
 	public function _activate() {
@@ -169,7 +195,8 @@ final class Super_Simple_CRM {
 	 * Deactivate the plugin
 	 * Uninstall routines should be in uninstall.php
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return void
 	 */
 	public function _deactivate() {}
@@ -177,7 +204,8 @@ final class Super_Simple_CRM {
 	/**
 	 * Init hooks
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @return void
 	 */
 	public function init() {
@@ -190,9 +218,11 @@ final class Super_Simple_CRM {
 	/**
 	 * Magic getter for our object.
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @param string $field Field to get.
 	 * @throws Exception Throws an exception if the field is invalid.
+	 *
 	 * @return mixed
 	 */
 	public function __get( $field ) {
@@ -211,8 +241,10 @@ final class Super_Simple_CRM {
 	/**
 	 * Include a file from the includes directory
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @param  string $filename Name of the file to be included.
+	 *
 	 * @return bool   Result of include call.
 	 */
 	public static function include_file( $filename ) {
@@ -226,8 +258,10 @@ final class Super_Simple_CRM {
 	/**
 	 * This plugin's directory
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @param  string $path (optional) appended path.
+	 *
 	 * @return string       Directory and path
 	 */
 	public static function dir( $path = '' ) {
@@ -239,8 +273,10 @@ final class Super_Simple_CRM {
 	/**
 	 * This plugin's url
 	 *
-	 * @since  NEXT
+	 * @since 0.0.1
+	 *
 	 * @param  string $path (optional) appended path.
+	 *
 	 * @return string       URL and path
 	 */
 	public static function url( $path = '' ) {
@@ -254,7 +290,8 @@ final class Super_Simple_CRM {
  * Grab the Super_Simple_CRM object and return it.
  * Wrapper for Super_Simple_CRM::get_instance()
  *
- * @since  NEXT
+ * @since 0.0.1
+ *        
  * @return Super_Simple_CRM  Singleton instance of plugin class.
  */
 function super_simple_crm() {

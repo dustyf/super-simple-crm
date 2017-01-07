@@ -2,29 +2,32 @@
 /**
  * Super Simple CRM Customer Data
  *
- * @since NEXT
+ * @since 0.0.1
  * @package Super Simple CRM
  */
 
 /**
  * Super Simple CRM Customer Data.
  *
- * @since NEXT
+ * @since 0.0.1
  */
 class SSCRM_Customer_Data {
 	/**
 	 * Parent plugin class
 	 *
+	 * @since 0.0.1
+	 *
 	 * @var   class
-	 * @since NEXT
 	 */
 	protected $plugin = null;
 
 	/**
 	 * Constructor
 	 *
-	 * @since  NEXT
+	 * @since  0.0.1
+	 *
 	 * @param  object $plugin Main plugin object.
+	 *
 	 * @return void
 	 */
 	public function __construct( $plugin ) {
@@ -35,7 +38,7 @@ class SSCRM_Customer_Data {
 	/**
 	 * Initiate our hooks
 	 *
-	 * @since  NEXT
+	 * @since  0.0.1
 	 * @return void
 	 */
 	public function hooks() {
@@ -49,6 +52,10 @@ class SSCRM_Customer_Data {
 
 	/**
 	 * Register the Customer custom post type for storing customer data.
+	 *
+	 * @since  0.0.1
+	 *
+	 * @return void
 	 */
 	public function register_customer_post_type() {
 		register_post_type( 'sscrm_customer', array(
@@ -82,6 +89,10 @@ class SSCRM_Customer_Data {
 
 	/**
 	 * Register the custom taxonomies
+	 *
+	 * @since  0.0.1
+	 *
+	 * @return void
 	 */
 	public function register_customer_taxonomies() {
 		// Register Tag Taxonomy
@@ -133,6 +144,15 @@ class SSCRM_Customer_Data {
 		) );
 	}
 
+	/**
+	 * Add new admin columns to the admin list view for customer data.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param array $columns An array of column data.
+	 *
+	 * @return array Modified array of column data.
+	 */
 	public function admin_columns( $columns ) {
 		$columns = array(
 			'cb'                               => '<input type="checkbox" />',
@@ -148,6 +168,16 @@ class SSCRM_Customer_Data {
 		return $columns;
 	}
 
+	/**
+	 * Adds the customer data to the columns.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param string $column  The column slug.
+	 * @param int    $post_id The ID of the post.
+	 *
+	 * @return void
+	 */
 	public function manage_columns( $column, $post_id ) {
 		switch( $column ) {
 			case 'phone' :
@@ -164,6 +194,13 @@ class SSCRM_Customer_Data {
 		}
 	}
 
+	/**
+	 * Declare new columns as sortable
+	 *
+	 * @since  0.0.1
+	 *
+	 * @return array A modified array of columns which are sortable.
+	 */
 	public function sortable_columns() {
 		$columns['phone'] = 'phone';
 		$columns['email'] = 'email';
@@ -172,10 +209,26 @@ class SSCRM_Customer_Data {
 		return $columns;
 	}
 
+	/**
+	 * Hook in the sorting to the request filter.
+	 *
+	 * @since  0.0.1
+	 *
+	 * @return void
+	 */
 	public function handle_sorting() {
 		add_filter( 'request', array( $this, 'sort' ) );
 	}
 
+	/**
+	 * Modify the admin query for the list table to handle sorting by our customer data.
+	 *
+	 * @param $vars An array of variables used for displaying posts in the list table
+	 *
+	 * @since 0.0.1
+	 *
+	 * @return array An array of variables used for displaying posts in the list table
+	 */
 	public function sort( $vars ) {
 		if ( isset( $vars['post_type'] ) && 'sscrm_customer' == $vars['post_type'] ) {
 			if ( isset( $vars['orderby'] ) && 'phone' == $vars['orderby'] ) {
@@ -210,12 +263,35 @@ class SSCRM_Customer_Data {
 		return $vars;
 	}
 
+	/**
+	 * Add a customer data metabox to our sscrm_customer CPT edit screen.
+	 *
+	 * @since  0.0.1
+	 *
+	 * @return void
+	 */
 	public function add_meta_box() {
 		add_meta_box( 'sscrm-customer-data', esc_html__( 'Submitted Customer Information', 'super-simple-crm' ), array( $this, 'render_meta_box' ), 'sscrm_customer' );
 	}
 
+	/**
+	 * Handles the rendering of the customer data metabox
+	 *
+	 * @since  0.0.1
+	 *
+	 * @param object $post The current post object
+	 *
+	 * @return void
+	 */
 	public function render_meta_box( $post ) {
 		wp_nonce_field( 'sscrm_customer_data_meta', 'sscrm_customer_data_meta' );
+		/**
+		 * Fires at the top of the customer data metabox.
+		 *
+		 * @since 0.0.1
+		 *
+		 * @param object $post The current post object
+		 */
 		do_action( 'sscrm_customer_data_metabox_top', $post );
 		?>
 		<p>
@@ -231,9 +307,25 @@ class SSCRM_Customer_Data {
 			<input id="sscrm_budget" name="sscrm_budget" type="text" value="<?php echo esc_html( get_post_meta( $post->ID, 'sscrm_budget', true ) ); ?>" /><br />
 		</p>
 		<?php
+		/**
+		 * Fires at the bottom of the customer data metabox.
+		 *
+		 * @since 0.0.1
+		 *
+		 * @param object $post The current post object
+		 */
 		do_action( 'sscrm_customer_data_metabox_bottom', $post );
 	}
 
+	/**
+	 * Processes our meta data for customer data upon saving of a post in the admin.
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param int $post_id The ID of the current post
+	 *
+	 * @return void
+	 */
 	public function save_customer_data( $post_id ) {
 		if ( ! is_admin() ) {
 			return;
@@ -254,6 +346,14 @@ class SSCRM_Customer_Data {
 		if ( isset( $_POST['sscrm_budget'] ) ) {
 			update_post_meta( $post_id, 'sscrm_budget', sanitize_text_field( $_POST['sscrm_budget'] ) );
 		}
+		/**
+		 * Fires at the top of the customer data metabox.
+		 *
+		 * @since 0.0.1
+		 *
+		 * @param int   $post_id    The current post ID
+		 * @param array $post_array An array of $_POST data
+		 */
 		do_action( 'sscrm_admin_save_customer_data', $post_id, $_POST );
 	}
 }
