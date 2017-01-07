@@ -49,23 +49,72 @@ class SSCRM_Form {
 
 	public function render() {
 		?>
-		<form id="sscrm_form">
-			<label for="sscrm_name">Name:</label> <input id="sscrm_name" name="sscrm_name" type="text" /><br/>
-			<label for="sscrm_phone">Phone Number:</label> <input id="sscrm_phone" name="sscrm_phone" type="tel" /><br/>
-			<label for="sscrm_email">Email Address:</label> <input id="sscrm_email" name="sscrm_email" type="email" /><br/>
-			<label for="sscrm_budget">Desired Budget:</label> <input id="sscrm_budget" name="sscrm_budget" type="text" /><br/>
-			<label for="sscrm_message">Message:</label> <textarea id="sscrm_message" name="sscrm_message"></textarea>
-			<?php wp_nonce_field( 'wp_rest' ); ?>
-			<button id="sscrm_submit">Send</button>
-		</form>
+		<style>
+			.spinner {
+				background: url('/wp-admin/images/wpspin_light.gif') no-repeat;
+				background-size: 16px 16px;
+				opacity: .7;
+				filter: alpha(opacity=70);
+				width: 16px;
+				height: 16px;
+				margin: 5px 5px 0;
+				display: inline-block;
+			}
+			#sscrm_form_container {
+				position: relative;
+				padding: 32px;
+
+			}
+			#sscrm_form_container .grayed-out {
+				background-color: rgba( 0,0,0,0.7 );
+				width: 100%;
+				height: 100%;
+				display: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				color: #fff;
+				padding: 32px;
+				text-align: center;
+			}
+			#sscrm_form_container .done-message {
+				display: none;
+			}
+		</style>
+		
+		<div id="sscrm_form_container">
+			<div class="grayed-out">
+				<div class="done-message">
+					<p>Thank you for contacting us. We will contact you shortly to discuss.</p>
+				</div>
+				<div class="sending-message">
+					<div class="spinner"></div>
+					<p>Sending...</p>
+				</div>
+			</div>
+			<form id="sscrm_form">
+				<label for="sscrm_name">Name: *</label> <input id="sscrm_name" name="sscrm_name" type="text" required /><br/>
+				<label for="sscrm_phone">Phone Number: *</label> <input id="sscrm_phone" name="sscrm_phone" type="tel" required /><br/>
+				<label for="sscrm_email">Email Address: *</label> <input id="sscrm_email" name="sscrm_email" type="email" required /><br/>
+				<label for="sscrm_budget">Desired Budget: *</label> <input id="sscrm_budget" name="sscrm_budget" type="text" required /><br/>
+				<label for="sscrm_message">Message: *</label> <textarea id="sscrm_message" name="sscrm_message" required></textarea>
+				<?php wp_nonce_field( 'wp_rest' ); ?>
+				<input id="sscrm_submit" name="sscrm_submit" type="submit" value="Send" />
+			</form>
+		</div>
 		<script>
 			jQuery( document ).ready( function( $ ) {
-				$('#sscrm_submit').click( function( e ) {
+				$( '#sscrm_form' ).submit( function( e ) {
 					e.preventDefault();
+					$( '#sscrm_form_container .grayed-out' ).show();
+					$( '#sscrm_form .spinner' ).show();
+					$( '#sscrm_submit' ).prop( 'disabled', true );
 					$.post(
 						'<?php echo esc_url( $this->ajax_url ); ?>',
 						$( "#sscrm_form" ).serialize(),
 						function( data ) {
+							$( '#sscrm_form_container .sending-message' ).hide();
+							$( '#sscrm_form_container .done-message' ).show();
 							console.log( data );
 						}
 					);
