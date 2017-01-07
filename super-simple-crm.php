@@ -70,7 +70,7 @@ final class Super_Simple_CRM {
 	 * @var  string
 	 * @since  NEXT
 	 */
-	const VERSION = '0.0.0';
+	const VERSION = '0.0.1';
 
 	/**
 	 * URL of plugin directory
