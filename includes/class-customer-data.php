@@ -44,7 +44,7 @@ class SSCRM_Customer_Data {
 		add_filter( 'manage_edit-sscrm_customer_sortable_columns', array( $this, 'sortable_columns' ) );
 		add_action( 'load-edit.php', array( $this, 'handle_sorting' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box') );
-		add_action( 'save_post', array( $this, 'save_customer_data' ) );
+		add_action( 'save_post_sscrm_customer', array( $this, 'save_customer_data' ) );
 	}
 
 	/**
@@ -235,6 +235,9 @@ class SSCRM_Customer_Data {
 	}
 
 	public function save_customer_data( $post_id ) {
+		if ( ! is_admin() ) {
+			return;
+		}
 		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
