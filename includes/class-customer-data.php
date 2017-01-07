@@ -39,8 +39,7 @@ class SSCRM_Customer_Data {
 	 * @return void
 	 */
 	public function hooks() {
-		$this->register_customer_post_type();
-		$this->register_customer_taxonomies();
+		
 	}
 
 	/**

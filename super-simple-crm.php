@@ -183,6 +183,8 @@ final class Super_Simple_CRM {
 	public function init() {
 		load_plugin_textdomain( 'super-simple-crm', false, dirname( $this->basename ) . '/languages/' );
 		$this->plugin_classes();
+		$this->customer_data->register_customer_post_type();
+		$this->customer_data->register_customer_taxonomies();
 	}
 
 	/**
