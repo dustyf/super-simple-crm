@@ -39,7 +39,10 @@ class SSCRM_Customer_Data {
 	 * @return void
 	 */
 	public function hooks() {
-		
+		add_filter( 'manage_edit-sscrm_customer_columns', array( $this, 'admin_columns' ) ) ;
+		add_action( 'manage_sscrm_customer_posts_custom_column', array( $this, 'manage_columns' ), 10, 2 );
+		add_filter( 'manage_edit-sscrm_customer_sortable_columns', array( $this, 'sortable_columns' ) );
+		add_action( 'load-edit.php', array( $this, 'handle_sorting' ) );
 	}
 
 	/**
@@ -126,5 +129,82 @@ class SSCRM_Customer_Data {
 				'menu_name'         => esc_html__( 'Category', 'super-simple-crm' ),
 			),
 		) );
+	}
+
+	public function admin_columns( $columns ) {
+		$columns = array(
+			'cb'                               => '<input type="checkbox" />',
+			'title'                            => esc_html__( 'Customer Name', 'super-simple-crm' ),
+			'phone'                            => esc_html__( 'Phone', 'super-simple-crm' ),
+			'email'                            => esc_html__( 'Email', 'super-simple-crm' ),
+			'budget'                           => esc_html__( 'Budget', 'super-simple-crm' ),
+			'taxonomy-sscrm_customer_tag'      => esc_html__( 'Tags', 'super-simple-crm' ),
+			'taxonomy-sscrm_customer_category' => esc_html__( 'Categories', 'super-simple-crm' ),
+			'date'                             => esc_html__( 'Submitted', 'super-simple-crm' ),
+		);
+
+		return $columns;
+	}
+
+	public function manage_columns( $column, $post_id ) {
+		switch( $column ) {
+			case 'phone' :
+				echo esc_html( get_post_meta( $post_id, 'sscrm_phone', true ) );
+				break;
+			case 'email' :
+				echo esc_html( get_post_meta( $post_id, 'sscrm_email', true ) );
+				break;
+			case 'budget' :
+				echo esc_html( get_post_meta( $post_id, 'sscrm_budget', true ) );
+				break;
+			default :
+				break;
+		}
+	}
+
+	public function sortable_columns() {
+		$columns['phone'] = 'phone';
+		$columns['email'] = 'email';
+		$columns['budget'] = 'budget';
+
+		return $columns;
+	}
+
+	public function handle_sorting() {
+		add_filter( 'request', array( $this, 'sort' ) );
+	}
+
+	public function sort( $vars ) {
+		if ( isset( $vars['post_type'] ) && 'sscrm_customer' == $vars['post_type'] ) {
+			if ( isset( $vars['orderby'] ) && 'phone' == $vars['orderby'] ) {
+				$vars = array_merge(
+					$vars,
+					array(
+						'meta_key' => 'sscrm_phone',
+						'orderby' => 'meta_value'
+					)
+				);
+			}
+			if ( isset( $vars['orderby'] ) && 'email' == $vars['orderby'] ) {
+				$vars = array_merge(
+					$vars,
+					array(
+						'meta_key' => 'sscrm_email',
+						'orderby' => 'meta_value'
+					)
+				);
+			}
+			if ( isset( $vars['orderby'] ) && 'budget' == $vars['orderby'] ) {
+				$vars = array_merge(
+					$vars,
+					array(
+						'meta_key' => 'sscrm_budget',
+						'orderby' => 'meta_value'
+					)
+				);
+			}
+		}
+
+		return $vars;
 	}
 }
