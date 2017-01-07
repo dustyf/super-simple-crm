@@ -43,6 +43,8 @@ class SSCRM_Customer_Data {
 		add_action( 'manage_sscrm_customer_posts_custom_column', array( $this, 'manage_columns' ), 10, 2 );
 		add_filter( 'manage_edit-sscrm_customer_sortable_columns', array( $this, 'sortable_columns' ) );
 		add_action( 'load-edit.php', array( $this, 'handle_sorting' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_box') );
+		add_action( 'save_post', array( $this, 'save_customer_data' ) );
 	}
 
 	/**
@@ -206,5 +208,49 @@ class SSCRM_Customer_Data {
 		}
 
 		return $vars;
+	}
+
+	public function add_meta_box() {
+		add_meta_box( 'sscrm-customer-data', esc_html__( 'Submitted Customer Information', 'super-simple-crm' ), array( $this, 'render_meta_box' ), 'sscrm_customer' );
+	}
+
+	public function render_meta_box( $post ) {
+		wp_nonce_field( 'sscrm_customer_data_meta', 'sscrm_customer_data_meta' );
+		do_action( 'sscrm_customer_data_metabox_top', $post );
+		?>
+		<p>
+			<label for="sscrm_phone"><?php echo esc_html__( 'Phone Number:', 'super-simple-crm' ); ?></label><br />
+			<input id="sscrm_phone" name="sscrm_phone" type="tel" value="<?php echo esc_html( get_post_meta( $post->ID, 'sscrm_phone', true ) ); ?>" />
+		</p>
+		<p>
+			<label for="sscrm_email"><?php echo esc_html__( 'Email Address:', 'super-simple-crm' ); ?></label><br />
+			<input id="sscrm_email" name="sscrm_email" type="email" value="<?php echo sanitize_email( get_post_meta( $post->ID, 'sscrm_email', true ) ); ?>" /><br />
+		</p>
+		<p>
+			<label for="sscrm_budget"><?php echo esc_html__( 'Desired Budget:', 'super-simple-crm' ); ?></label><br />
+			<input id="sscrm_budget" name="sscrm_budget" type="text" value="<?php echo esc_html( get_post_meta( $post->ID, 'sscrm_budget', true ) ); ?>" /><br />
+		</p>
+		<?php
+		do_action( 'sscrm_customer_data_metabox_bottom', $post );
+	}
+
+	public function save_customer_data( $post_id ) {
+		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		check_admin_referer( 'sscrm_customer_data_meta', 'sscrm_customer_data_meta' );
+		if( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+		if ( isset( $_POST['sscrm_phone'] ) ) {
+			update_post_meta( $post_id, 'sscrm_phone', sanitize_text_field( $_POST['sscrm_phone'] ) );
+		}
+		if ( isset( $_POST['sscrm_email'] ) ) {
+			update_post_meta( $post_id, 'sscrm_email', sanitize_text_field( $_POST['sscrm_email'] ) );
+		}
+		if ( isset( $_POST['sscrm_budget'] ) ) {
+			update_post_meta( $post_id, 'sscrm_budget', sanitize_text_field( $_POST['sscrm_budget'] ) );
+		}
+		do_action( 'sscrm_admin_save_customer_data', $post_id, $_POST );
 	}
 }
