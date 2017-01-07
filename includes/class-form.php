@@ -45,6 +45,15 @@ class SSCRM_Form {
 	public function hooks() {
 		add_shortcode( 'sscrm_form', array( $this, 'shortcode' ) );
 		add_action( 'rest_api_init', array( $this, 'rest_api_endpoint' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue' ) );
+	}
+
+	public function frontend_enqueue() {
+		wp_enqueue_script( 'super-simple-crm', $this->plugin->url . 'assets/sscrm.js', array( 'jquery' ), '0.0.1', true );
+		wp_enqueue_style( 'super-simple-crm', $this->plugin->url . 'assets/sscrm.css', array(), '0.0.1' );
+		wp_localize_script( 'super-simple-crm', 'sscrm_args', array(
+			'ajax_url' => esc_url( $this->ajax_url ),
+		) );
 	}
 
 	public function render( $atts ) {
@@ -77,44 +86,6 @@ class SSCRM_Form {
 			'submit_text'         => esc_html__( 'Send', 'sumper-simple-crm' ),
 		) )
 		?>
-		<style>
-			.spinner {
-				background: url('/wp-admin/images/wpspin_light.gif') no-repeat;
-				background-size: 16px 16px;
-				opacity: .7;
-				filter: alpha(opacity=70);
-				width: 16px;
-				height: 16px;
-				margin: 5px 5px 0;
-				display: inline-block;
-			}
-			#sscrm_form_container {
-				position: relative;
-				padding: 32px;
-
-			}
-			#sscrm_form_container .grayed-out {
-				background-color: rgba( 0,0,0,0.7 );
-				width: 100%;
-				height: 100%;
-				display: none;
-				position: absolute;
-				top: 0;
-				left: 0;
-				color: #fff;
-				padding: 32px;
-				text-align: center;
-			}
-			#sscrm_form_container .fail-message{
-				display: none;
-			}
-			#sscrm_form_container .done-message {
-				display: none;
-			}
-			#sscrm_submit {
-				margin-top: 16px;
-			}
-		</style>
 		<?php do_action( 'sscrm_before_form_container', $atts ); ?>
 		<div id="sscrm_form_container">
 			<div class="grayed-out">
@@ -151,27 +122,6 @@ class SSCRM_Form {
 			<?php do_action( 'sscrm_after_form', $atts ); ?>
 		</div>
 		<?php do_action( 'sscrm_after_form_container', $atts ); ?>
-		<script>
-			jQuery( document ).ready( function( $ ) {
-				$( '#sscrm_form' ).submit( function( e ) {
-					e.preventDefault();
-					$( '#sscrm_form_container .grayed-out' ).show();
-					$( '#sscrm_submit' ).prop( 'disabled', true );
-					$.post(
-						'<?php echo esc_url( $this->ajax_url ); ?>',
-						$( "#sscrm_form" ).serialize(),
-						function( data ) {
-							$( '#sscrm_form_container .sending-message' ).hide();
-							$( '#sscrm_form_container .done-message' ).show();
-						}
-					).fail( function( data ) {
-						$( '#sscrm_form_container .sending-message' ).hide();
-						$( '#sscrm_form_container .fail-message' ).show();
-						console.log( data );
-					} );
-				} )
-			} );
-		</script>
 		<?php
 	}
 

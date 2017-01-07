@@ -1,0 +1,36 @@
+#sscrm_form_container .spinner {
+	background: url('/wp-admin/images/wpspin_light.gif') no-repeat;
+	background-size: 16px 16px;
+	opacity: .7;
+	filter: alpha(opacity=70);
+	width: 16px;
+	height: 16px;
+	margin: 5px 5px 0;
+	display: inline-block;
+}
+#sscrm_form_container {
+	position: relative;
+	padding: 32px;
+
+}
+#sscrm_form_container .grayed-out {
+	background-color: rgba( 0,0,0,0.7 );
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #fff;
+	padding: 32px;
+	text-align: center;
+}
+#sscrm_form_container .fail-message{
+	display: none;
+}
+#sscrm_form_container .done-message {
+	display: none;
+}
+#sscrm_submit {
+	margin-top: 16px;
+}
