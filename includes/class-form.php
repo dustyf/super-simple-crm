@@ -59,11 +59,11 @@ class SSCRM_Form {
 			'email_label'         => esc_html__( 'Email Address:', 'super-simple-crm' ),
 			'budget_label'        => esc_html__( 'Desired Budget:', 'super-simple-crm' ),
 			'message_label'       => esc_html__( 'Message:', 'super-simple-crm' ),
-			'name_max_length'     => '',
-			'phone_max_length'    => '',
-			'email_max_length'    => '',
-			'budget_max_length'   => '',
-			'message_max_length'  => '',
+			'name_maxlength'      => '',
+			'phone_maxlength'     => '',
+			'email_maxlength'     => '',
+			'budget_maxlength'    => '',
+			'message_maxlength'   => '',
 			'message_rows'        => '',
 			'message_cols'        => '',
 			'name_placeholder'    => '',
@@ -73,6 +73,7 @@ class SSCRM_Form {
 			'message_placeholder' => '',
 			'thank_you'           => esc_html__( 'Thank you for contacting us. We will contact you shortly to discuss.', 'super-simple-crm' ),
 			'sending_message'     => esc_html__( 'Sending...', 'super-simple-crm' ),
+			'fail_message'        => esc_html__( 'Oops. Something went wrong. Try again and if it keeps up, let us know.', 'super-simple-crm' ),
 			'submit_text'         => esc_html__( 'Send', 'sumper-simple-crm' ),
 		) )
 		?>
@@ -104,8 +105,14 @@ class SSCRM_Form {
 				padding: 32px;
 				text-align: center;
 			}
+			#sscrm_form_container .fail-message{
+				display: none;
+			}
 			#sscrm_form_container .done-message {
 				display: none;
+			}
+			#sscrm_submit {
+				margin-top: 16px;
 			}
 		</style>
 		<?php do_action( 'sscrm_before_form_container', $atts ); ?>
@@ -122,15 +129,20 @@ class SSCRM_Form {
 					<p><?php echo esc_html( $atts['sending_message'] ); ?></p>
 					<?php do_action( 'sscrm_after_sending_message', $atts ); ?>
 				</div>
+				<div class="fail-message">
+					<?php do_action( 'sscrm_before_fail_message', $atts ); ?>
+					<p><?php echo esc_html( $atts['fail_message'] ); ?></p>
+					<?php do_action( 'sscrm_after_fail_message', $atts ); ?>
+				</div>
 			</div>
 			<?php do_action( 'sscrm_before_form', $atts ); ?>
 			<form id="sscrm_form">
 				<?php do_action( 'sscrm_form_top', $atts ); ?>
-				<label for="sscrm_name"><?php echo esc_html( $atts['name_label'] ); ?></label><?php if ( $atts['name_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_name" name="sscrm_name" type="text" required /><br/>
-				<label for="sscrm_phone"><?php echo esc_html( $atts['phone_label'] ); ?></label><?php if ( $atts['phone_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_phone" name="sscrm_phone" type="tel" required /><br/>
-				<label for="sscrm_email"><?php echo esc_html( $atts['email_label'] ); ?></label><?php if ( $atts['email_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_email" name="sscrm_email" type="email" required /><br/>
-				<label for="sscrm_budget"><?php echo esc_html( $atts['budget_label'] ); ?></label><?php if ( $atts['budget_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_budget" name="sscrm_budget" type="text" required /><br/>
-				<label for="sscrm_message"><?php echo esc_html( $atts['message_label'] ); ?></label><?php if ( $atts['message_required'] ) { ?> <span class="required">*</span><?php } ?> <textarea id="sscrm_message" name="sscrm_message" required></textarea>
+				<label for="sscrm_name"><?php echo esc_html( $atts['name_label'] ); ?></label><?php if ( $atts['name_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_name" name="sscrm_name" type="text"<?php echo isset( $atts['name_placeholder'] ) ? ' placeholder="' . esc_attr( $atts['name_placeholder'] ) . '"' : ''; echo isset( $atts['name_required'] ) ? ' required' : ''; echo isset( $atts['name_maxlength'] ) ? ' maxlength="' . absint( $atts['name_maxlength'] ) . '"' : ''; ?> /><br/>
+				<label for="sscrm_phone"><?php echo esc_html( $atts['phone_label'] ); ?></label><?php if ( $atts['phone_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_phone" name="sscrm_phone" type="tel"<?php echo isset( $atts['phone_placeholder'] ) ? ' placeholder="' . esc_attr( $atts['phone_placeholder'] ) . '"' : ''; echo isset( $atts['name_required'] ) ? ' required' : ''; echo isset( $atts['phone_maxlength'] ) ? ' maxlength="' . absint( $atts['phone_maxlength'] ) . '"' : ''; ?> /><br/>
+				<label for="sscrm_email"><?php echo esc_html( $atts['email_label'] ); ?></label><?php if ( $atts['email_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_email" name="sscrm_email" type="email"<?php echo isset( $atts['email_placeholder'] ) ? ' placeholder="' . esc_attr( $atts['email_placeholder'] ) . '"' : ''; echo isset( $atts['name_required'] ) ? ' required' : ''; echo isset( $atts['email_maxlength'] ) ? ' maxlength="' . absint( $atts['email_maxlength'] ) . '"' : ''; ?> /><br/>
+				<label for="sscrm_budget"><?php echo esc_html( $atts['budget_label'] ); ?></label><?php if ( $atts['budget_required'] ) { ?> <span class="required">*</span><?php } ?> <input id="sscrm_budget" name="sscrm_budget" type="text"<?php echo isset( $atts['budget_placeholder'] ) ? ' placeholder="' . esc_attr( $atts['budget_placeholder'] ) . '"' : ''; echo isset( $atts['name_required'] ) ? ' required' : ''; echo isset( $atts['budget_maxlength'] ) ? ' maxlength="' . absint( $atts['budget_maxlength'] ) . '"' : ''; ?> /><br/>
+				<label for="sscrm_message"><?php echo esc_html( $atts['message_label'] ); ?></label><?php if ( $atts['message_required'] ) { ?> <span class="required">*</span><?php } ?> <textarea id="sscrm_message" name="sscrm_message"<?php echo isset( $atts['message_placeholder'] ) ? ' placeholder="' . esc_attr( $atts['message_placeholder'] ) . '"' : ''; echo isset( $atts['message_required'] ) ? ' required' : ''; echo isset( $atts['message_maxlength'] ) ? ' maxlength="' . absint( $atts['message_maxlength'] ) . '"' : ''; ?>></textarea>
 				<?php wp_nonce_field( 'wp_rest' ); ?>
 				<?php do_action( 'sscrm_before_form_submit', $atts ); ?>
 				<input id="sscrm_submit" name="sscrm_submit" type="submit" value="<?php echo esc_html( $atts['submit_text'] ); ?>" />
@@ -144,7 +156,6 @@ class SSCRM_Form {
 				$( '#sscrm_form' ).submit( function( e ) {
 					e.preventDefault();
 					$( '#sscrm_form_container .grayed-out' ).show();
-					$( '#sscrm_form .spinner' ).show();
 					$( '#sscrm_submit' ).prop( 'disabled', true );
 					$.post(
 						'<?php echo esc_url( $this->ajax_url ); ?>',
@@ -176,11 +187,11 @@ class SSCRM_Form {
 			'email_label'         => esc_html__( 'Email Address:', 'super-simple-crm' ),
 			'budget_label'        => esc_html__( 'Desired Budget:', 'super-simple-crm' ),
 			'message_label'       => esc_html__( 'Message:', 'super-simple-crm' ),
-			'name_max_length'     => '',
-			'phone_max_length'    => '',
-			'email_max_length'    => '',
-			'budget_max_length'   => '',
-			'message_max_length'  => '',
+			'name_maxlength'      => '',
+			'phone_maxlength'     => '',
+			'email_maxlength'     => '',
+			'budget_maxlength'    => '',
+			'message_maxlength'   => '',
 			'message_rows'        => '',
 			'message_cols'        => '',
 			'name_placeholder'    => '',
@@ -190,6 +201,7 @@ class SSCRM_Form {
 			'message_placeholder' => '',
 			'thank_you'           => esc_html__( 'Thank you for contacting us. We will contact you shortly to discuss.', 'super-simple-crm' ),
 			'sending_message'     => esc_html__( 'Sending...', 'super-simple-crm' ),
+			'fail_message'        => esc_html__( 'Oops. Something went wrong. Try again and if it keeps up, let us know.', 'super-simple-crm' ),
 			'submit_text'         => esc_html__( 'Send', 'sumper-simple-crm' ),
 		), $atts, 'sscrm_form' );
 		ob_start();
@@ -215,13 +227,14 @@ class SSCRM_Form {
 		$time_json = json_decode( wp_remote_retrieve_body($time) );
 		$timestamp = $time_json->dateString;
 		$customer_data = array(
-			'name'    => sanitize_text_field( $params['sscrm_name'] ),
-			'phone'   => sanitize_text_field( $params['sscrm_phone'] ),
-			'email'   => sanitize_email( $params['sscrm_email'] ),
-			'budget'  => sanitize_text_field( $params['sscrm_budget'] ),
-			'message' => sanitize_text_field( $params['sscrm_message'] ),
-			'time'    => sanitize_text_field( $timestamp ),
+			'name'    => $params['sscrm_name'],
+			'phone'   => $params['sscrm_phone'],
+			'email'   => $params['sscrm_email'],
+			'budget'  => $params['sscrm_budget'],
+			'message' => $params['sscrm_message'],
+			'time'    => $timestamp,
 		);
+		$customer_data = apply_filters( 'sscrm_customer_data_to_input', $customer_data, $params, $request );
 		$this->insert_post( $customer_data );
 
 		return rest_ensure_response( $customer_data );
@@ -239,18 +252,35 @@ class SSCRM_Form {
 			'post_status'   => 'publish',
 		) );
 		do_action( 'sscrm_after_insert_post', $customer_data, $post_id );
-		foreach ( $customer_data as $key => $meta ) {
-			if ( in_array( $key, array( 'name', 'message', 'time' ) ) ) {
-				continue;
-			}
-			$this->add_meta( $post_id, 'sscrm_' . $key, $meta );
-		}
+
+		unset( $customer_data['message'] );
+		unset( $customer_data['name'] );
+		unset( $customer_data['time'] );
+
+		array_walk( $customer_data, array( $this, 'sanitize_meta' ), $post_id );
+		array_walk( $customer_data, array( $this, 'add_meta' ), $post_id );
 	}
 
-	public function add_meta( $post_id, $key, $meta ) {
+	public function add_meta( $meta, $key, $post_id ) {
 		do_action( 'sscrm_before_add_' . $key . '_meta', $meta, $key, $post_id );
 		$update = update_post_meta( $post_id, $key, $meta );
 		do_action( 'sscrm_after_add_' . $key . '_meta', $meta, $key, $post_id );
 		return $update;
+	}
+
+	public function sanitize_meta( $meta, $key, $post_id ) {
+		do_action( 'sscrm_before_sanitize_' . $key . '_meta', $meta, $key, $post_id );
+		$sanitize_functions = apply_filters( 'sscrm_meta_sanitize_functions', array(
+			'email' => 'sanitize_email',
+		) );
+		if ( ! isset( $sanitize_functions[ $key ] ) ) {
+			$sanitized = sanitize_text_field( $meta );
+		} else {
+			$sanitized = call_user_func( $sanitize_functions[ $key ], $meta );
+		}
+
+
+		do_action( 'sscrm_after_sanitize_' . $key . '_meta', $meta, $key, $post_id );
+		return $sanitized;
 	}
 }
