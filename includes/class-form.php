@@ -263,7 +263,7 @@ class SSCRM_Form {
 
 	public function add_meta( $meta, $key, $post_id ) {
 		do_action( 'sscrm_before_add_' . $key . '_meta', $meta, $key, $post_id );
-		$update = update_post_meta( $post_id, $key, $meta );
+		$update = update_post_meta( $post_id, 'sscrm_' . $key, $meta );
 		do_action( 'sscrm_after_add_' . $key . '_meta', $meta, $key, $post_id );
 		return $update;
 	}
